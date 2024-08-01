@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+    <div class="watch">
+    <div class="stopwatch">
+        <h1>STOP WATCH</h1>
+        <div class="time" id="display">00:00:00</div>
+        <button onclick="start()">Start</button>
+        <button onclick="lap()">Lap</button>
+        <button onclick="stop()">Stop</button>
+        <button onclick="reset()">Reset</button>
+        <div class="laps" id="laps"></div>
+    </div>
+    </div>
+    <script>
+        let startTime, updatedTime, difference = 0, tInterval, running = false, lapNumber = 1;
+    
+        function start() {
+            if (!running) {
+                startTime = new Date().getTime() - difference;
+                tInterval = setInterval(updateDisplay, 1);
+                running = true;
+            }
+        }
+    
+        function stop() {
+            if (running) {
+                clearInterval(tInterval);
+                difference = new Date().getTime() - startTime;
+                running = false;
+            }
+        }
+    
+        function reset() {
+            clearInterval(tInterval);
+            difference = lapNumber = 0;
+            running = false;
+            document.getElementById('display').textContent = "00:00:00";
+            document.getElementById('laps').innerHTML = '';
+        }
+    
+        function lap() {
+            if (running) {
+                const lapTime = document.createElement('div');
+                lapTime.textContent = `Lap ${lapNumber++}: ${document.getElementById('display').textContent}`;
+                document.getElementById('laps').appendChild(lapTime);
+            }
+        }
+    
+        function updateDisplay() {
+            difference = new Date().getTime() - startTime;
+            const hours = Math.floor((difference % 86400000) / 3600000).toString().padStart(2, '0');
+            const minutes = Math.floor((difference % 3600000) / 60000).toString().padStart(2, '0');
+            const seconds = Math.floor((difference % 60000) / 1000).toString().padStart(2, '0');
+            document.getElementById('display').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+    </script>
+    </body>
+    </html>
+    
